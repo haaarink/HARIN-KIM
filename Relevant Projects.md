@@ -1,7 +1,8 @@
 # [Intro to info security] - Project 4 
 Project 4 writeup link : https://docs.google.com/document/d/1QPXEkzctCYLx1wqVzRchaQ0DOuFWZkW7pvU-f61BVaM/edit#heading=h.tfa3yzqmj60y
 
-# [Blockchain and Cryptocurrency] - Buzzcoin Carnival Project (part1과 part2로 나누어져있습니다.)
+# [Blockchain and Cryptocurrency] 
+Buzzcoin Carnival Project (part1과 part2로 나누어져있습니다.)
 
 <PART1 - Project Description>
 We have made our own cryptocurrency called buzzcoin, and deployed a contract at
@@ -235,6 +236,8 @@ I will have an updating leaderboard on the buzzcoin website eventually. More
 random buzzcoin rewards may be dropped occasionally.
 
 <PART2 - Solidity file>
+<pre>
+<code>
 pragma solidity >= 0.5.0 < 0.6.0;
 
 /*
@@ -517,3 +520,5 @@ https://www.vice.com/en/article/4agdwg/pete-buttigieg-would-really-like-you-to-f
         }
     }
 }
+</code>
+</pre>
