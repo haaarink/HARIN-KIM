@@ -20,6 +20,8 @@ phone : 010-7741-1426
   
 인턴 경험 : 무
   
+자기 소개 : 빨리 배우고 책임감이 있습니다. 시간 약속을 잘 지킵니다. 새로운 시도를 좋아합니다.
+  
 # Relevant Projects
   https://github.com/haaarink/HARIN-KIM/blob/main/Relevant%20Projects.md
 
