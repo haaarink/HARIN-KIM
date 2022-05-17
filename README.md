@@ -21,6 +21,6 @@ phone : 010-7741-1426
 인턴 경험 : 무
   
 # Relevant Projects
-  Relevant Projects.md
+  https://github.com/haaarink/HARIN-KIM/blob/main/Relevant%20Projects.md
 
 
