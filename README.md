@@ -21,6 +21,6 @@ phone : 010-7741-1426
 인턴 경험 : 무
   
 # Relevant Projects
-  [Intro to info security] - Project 4 : 
+  Relevant Projects.md
 
 
