@@ -1,690 +1,193 @@
+[Intro to info security] - Project 4 
+Project 4 writeup link : https://docs.google.com/document/d/1QPXEkzctCYLx1wqVzRchaQ0DOuFWZkW7pvU-f61BVaM/edit#heading=h.tfa3yzqmj60y
 
-Project 4: 
-Web Security
-Spring 2022
+[Blockchain and Cryptocurrency] - Buzzcoin Carnival Project
 
-The goals of this project:	2
-Intro:	3
-Warm Up Exercises - (20 points)	6
-Target 1: XSRF (25 points)	11
-Target 2: XSS Username and Password Theft (30 points)	14
-Sample t2.html deliverable:	15
-https://drive.google.com/file/d/1s5WmU6Ygu8CTl0VfIQeyupr9-CDZ_a6I/view?usp=sharing	15
-Milestones	15
-Notes	16
-Example of Successful Exploit	16
-Target 3: SQL Injection (25 points)	18
-Deliverables	18
-Sample t3.html deliverable:	18
-https://drive.google.com/file/d/1C8CDBSLerl-RQZZAWJm4GH1CVboKwcwN/view?usp=sharing	18
-Milestones	18
-Example of Successful Exploit	19
+<Project Description>
+We have made our own cryptocurrency called buzzcoin, and deployed a contract at
+a specified address. The contract contains five functions, which will pay you
+some buzzcoin. Your job is to make every function pay you. The number of
+buzzcoin you can get is your grade.
 
+Before you do anything. Take a good long look at the contract provided. Make
+sure you understand (or even test with truffle since you should know how by
+now) what each question does before you attempt. Compile the contract and make
+sure that the abi matches. I compiled it with version 0.5.16
 
+When you are ready, here are instructions to run on our blockchain:
 
 
+1) Install metamask. This is a firefox/chrome extension. Follow through the
+setup. Make sure not to also use real crypto with this!
 
+2) Import the key we sent you over canvas messages. Go to import account,
+select json, and choose the key. The password for everyone is "buzz". Don't
+share your key with other students!
 
+3) Go to expanded view, settings, add custom network, and provide it with the
+following:
 
+Network Name: Buzzcoin
+RPC URL: http://143.215.130.235:8545
+Chain ID: 9090
+Currency Symbol: Buzz
 
-The goals of this project:
+4) If everything goes well, metamask will query our blockchain for your
+balance, and it should say 1 BUZZ! If is does not say that, then you did
+something wrong
 
-Students are asked to read up on web security basics and write simple web vulnerabilities using Javascript/HTML
-A series of warm up activities will help ease students into the assignment
-With their knowledge on web security, the students are expected to attack three targets using the following web exploits:
-Target 1 - Cross-site Request Forgery (XSRF)
-Target 2 - Cross Site Scripting (XSS)
-Target 3 - SQL Injection (SQLi)
+5) Now to interact with the contract, you will need the address I deployed it
+at, plus the "abi", which is just an interface to functions and definitions
 
-Students should be able to thoroughly and clearly explain the vulnerability in each target and explain the details about how to correct it as if they were writing to a development team in charge of patching the web app.
-Read Piazza – Lots of questions are answered there daily. Be sure to check there before asking a question.
-Plagiarism will not be tolerated! Everything that is not yours BE SURE TO CITE.
-We will be using anti-cheating software, so you will be caught and reported to OSI.
-You must include a works cited page.
-SUBMIT YOUR REPORT.PDF TO BOTH GRADESCOPE AND CANVAS.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Intro:
-
-Congratulations! You just started your first day at your summer internship at Red Team Inc., a penetration testing company that specializes in testing customers’ web applications. Your mentor, Jason, introduces himself to you, and lets you know that you’ll be working with him and the rest of his team for the next few weeks doing a penetration test on the payroll site for your own school, Georgia Tech!
-
-To get you up to speed on the skills required to do your job, he starts off by assigning some readings and warm up exercises.
-
-Prior Reading and Important Notes from your Mentor:
-This project requires submitting forms. If you do not know how to do so, you may consult
-http://www.w3schools.com/html/html_forms.asp
-
-This project requires writing JavaScript. Only a very basic knowledge of JavaScript is needed. You may find http://eloquentjavascript.net/ useful if you are completely new to JavaScript. Even if not completely new, you may find chapters 13 (JavaScript and the Browser), 14 (The Document Object Model), 15 (Handling Events), and 18 (HTTP and Forms) particularly useful.
-
-You are not required to follow the format unless specifically called out in the target (example: Activity 5 & Target 3). As long as the exploits work according to the requirements, you will receive full credit.
-
-You are NOT submitting any PHP code in this project. Thus, your exploits should not modify the provided PHP files on the VM besides for debugging purposes. If you do happen to modify the PHP files, make sure you revert your changes when you test your exploit. We test your exploits using your submitted .html files and run them against the original, unmodified payroll server provided in the VM. This is a common mistake our interns make, so please make sure to use the original files to test your final exploits.
-
-This project will require you to read and understand PHP (PHP Hypertext Preprocessor), which runs on a web server and responds to HTTP requests with dynamically generated pages and responses. It essentially works by taking template HTML files and filling them in by running scripts embedded in the template.
-
-
-
-
-
-
-
-
-Getting Your Development Machine Set Up:
-NOTE: You cannot use the VM from project 2. Critical changes were made and you must use the updated VM linked below. We cannot award credit for those that do not use this latest version.
-
-https://cs6035.s3.amazonaws.com/CS6035+-+P2+P3+P4+Spring+2022+-+Updated.ova
-
-	SHA fingerprint: 17e900e074b242e84a88501db2b145202d6633292912925f61a64a5572fce1e9
-
-Use the same username and password you used for project 2:
-
-Username
-Password
-debian
-debian
-
-
-
-Helpful Hints from your Mentor:
-The primary site we will be exploiting in this project is http://payroll.gatech.edu, which you can only visit on the VM. Please note again that this does not point to a legitimate site in the real world and only exists in the VM. For testing purposes, you may register accounts at your will. However, please DO NOT use your actual passwords and banking account information.
-The developers for the website have tried to implement some safeguards to protect against some common web exploits. However, these may or may not be effective, and part of your role will be to audit the correctness of their safeguards.
-The source code of the site can be found on the VM in /var/www/payroll. There is a bookmark added to the file manager to make your job a bit easier. 
-
-
-You will be using the Chrome browser to complete all portions of this project. Do not use Firefox. It will fail on some targets and you’ll waste a ton of time. 
-
-Use Chrome for project 4!
-
-Disclaimer:
-
-This project is solely for educational purposes. Professor Wenke Lee and the people affiliated with his teaching and research are NOT responsible in the event of any criminal charges brought against any individuals misusing the information in this project to break the law. When in doubt, please consult the TAs or Professor Lee regarding any questions or issues you may have.
-
-We hope you enjoy this challenging yet rewarding project. Now onto the details!
-
-
-
-Warm Up Exercises - (20 points)
-
-To get you up to speed with web development, your mentor, Jason, has assigned you the following guided learning questions. He tells you to complete these and then report back to him so he can start assigning you tasks. He reminds you about the resources he provided to you earlier. You might find those useful when answering these questions.
-
-1.a - Basic HTML & PHP Questions (Ungraded but very helpful)
-
-Your mentor explains that you should be able to answer the following questions before starting the projects. If you come to his desk and ask him any of these questions, he’ll refer you to this writeup :)
-
-Describe what HTML is (including what it stands for). What is its role in a website?
-What does PHP stand for, and how is it used?  What is the difference between basic HTML and PHP?
-What is the delineator for PHP code (i.e., how does the PHP interpreter know when there is server-side code to run)? 
-What is SQL?  What is its purpose, and with what is it used to communicate?
-How does SQL work in a website?  Where is the SQL command executed?  Is it done in HTML or in PHP?
-What is the DOM?  What does that stand for?  How does HTML support DOM and how do you access it?  How does JavaScript use the DOM and do things with it?
-
-
-1.b - Getting to know the browser dev tools (10 points)
-
-You’ll be using the Chrome browser to solve all problems in this project. The goal is to get you more familiar with the built-in browser developer tools. Chrome is installed in the VM and ready for you to use.
-
-Activity 1 - The Inspector & Console tabs
-The goal of this activity is to familiarize you with the basic html inspector (‘elements’ tab) and console of the browser tools. To access these tools click F12 or use the menus within the browser to bring them up.
-
-Launch Chrome and navigate to this URL → http://cs6035-warmup.gatech.edu:5000/tools  
-Use the inspector (elements tab) and console tabs to answer the following questions about this login screen. Note: You don’t actually log in. The page that shows up at the link IS the site you should use to answer the questions below.
-
-What is the value of the ‘CanYouSeeMe’ input? 
-Do not include quotes in your answer.
-The page references a single JavaScript file in a script tag. Name this file including the file extension. 
-Do not include the path, just the file and extension. Ex: “ajavascriptfile.js”
-The script file has a JavaScript function named ‘runme’. Use the console to execute this function. What is the output that shows up in the console? 
-Do not include quotes in your answer.
-
-
-Activity 2 - Network Tab
-The goal of this activity is to familiarize you with the network activity between the browser and the server. Use the network tab to understand how HTTP requests are sent to the server and what types of data come back in the responses.
-
-Launch Chrome and navigate to this URL → http://cs6035-warmup.gatech.edu:5000/tools 
-Open the network tab and then click on the ‘Sign In’ button. No need to provide any credentials, leave them blank. Use the network tab to answer the following questions.
-
-What request method (http verb) was used in the request to the server?
-What status code did the server return?
-Ex: “200 Ok”
-The server returned a cookie named ‘Samy’ for the browser to store. What is the value of this cookie?
-Do not include quotes in your answer.
-
-
-
-Activity 3 - Echo XSS
-The goal of this activity is to ease you into one of the most prominent types of web-based attacks. Reflected XSS (Cross Site Scripting) 
-
-Launch Chrome and get ready! You’ve found a webpage that echoes back a query parameter that you provide in the request to the server. Navigate to this URL to test it out →  http://cs6035-warmup.gatech.edu:5000/tools/echo?payload=SampleText  
-
-You can do more than just echo back text. Construct a URL such that a JavaScript alert dialog appears with the text cs6035 on the screen. Submit your constructed URL as your answer.
-Note: It is Required that the URL you submit starts with this -> “http://cs6035-warmup.gatech.edu:5000/tools/echo”
-You will lose all points if the URL doesn’t start with the string above.
-You are required to use this template when submitting your constructed URL. This will be autograded so the template is used for that purpose only. https://drive.google.com/file/d/1QGJAQFcCICWCLuIu4wU4h774N-YgfruY/view?usp=sharing 
-
-Example of Successful Exploit
-
-Our autograder is a Selenium script so it will simulate user interaction using the same exact browser and VM that you have. It will do the following for this activity:
-
-Launch your activity3.html file
-Only modify the url value of the html template 
-Verify that the URL of the page starts with http://cs6035-warmup.gatech.edu:5000/tools/echo  
-Verify that an alert shows up on the resulting page with the text cs6035 in it.
-
-
-
-1.c - Working with HTML forms & JavaScript (10 points)
-
-Activity 4 - Submitting forms
-The goal of this activity is to familiarize you with HTML forms. You need to construct an html page that will submit a simple form to the server. Feel free to use the template below. It’s not required for this activity but highly recommended. Complete this activity from within the VM using the Chrome browser.
-
-Here are your requirements for building the html file:
-
-The form MUST autosubmit. The autograder will not click any buttons nor will a TA.
-The URL that you need to submit your form to →  http://cs6035-warmup.gatech.edu:5000/forms  
-You need to POST the form to the server
-You need to provide a URL query parameter in your submission
-IsHoneyPot with a value of false
-You need to provide the following form input values
-Name: ‘GATechID’; Value: your Georgia Tech username, Example: hmurphy31
-Name: ‘MagicNumber’; Value: Any number, ex: 5
-	
-Here is a code snippet you can start with:
-https://drive.google.com/file/d/1ELWaN92kau78875zgnYOz7Rbx_1vSOKc/view?usp=sharing
-
-Once you successfully submit the form, you’ll see a message similar to the following:
-
-“Congratulations! you've successfully finished this activity. The answer is <REDACTED>”
-
-You MUST see this page to receive credit for this activity!
-
-You will submit activity4.html to canvas for this section. There is nothing you need to write in the report for this activity.
-
-Example of Successful Exploit
-
-Our autograder is a Selenium script so it will simulate user interaction using the same exact browser and VM that you have. It will do the following for this activity:
-
-Launch your activity4.html file
-The page MUST autosubmit
-Verify that the URL of the page starts with http://cs6035-warmup.gatech.edu:5000 
-Verify that the text “Congratulations! you've successfully finished this activity. The answer is <REDACTED>” appears in the resulting page.
-
-
-
-
-Activity 5 - Accessing the DOM with JavaScript
-In this activity you’ll complete a JavaScript function that will utilize the DOM (document object model) to fetch several values in a sample website and print them to the page. This will give you a little insight into how the DOM works and ways you may retrieve these values and trigger/handle events.
-
-You must use the template provided here. Failure to do so will result in a zero for this section.
-https://drive.google.com/file/d/1QKD2MGlZqsrg9fmCr60H3fseQ1fdMQ3N/view?usp=sharing 
-Your task is to write JavaScript in the provided function that meets each goal specified in the comments. Do not change any code outside of this function.
-Once completed, your page will look similar to the screenshot below. The values will be different when we grade your function so do not hard-code any value we’re asking you to fetch with JavaScript.
-To get started, simply download the template above and double click it. You’ll see a page launch with several TODOs. View the source and begin editing the function provided in the template you downloaded.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Example Output Expected:
-
-
-
-
-Example of Successful Exploit
-
-Our autograder is a Selenium script so it will simulate user interaction using the same exact browser and VM that you have. It will do the following for this activity:
-
-Launch your activity5.html file, Note: you must use our provided template.
-Verify that each item in the JavaScript file is correctly displaying on the page.
-The order of the items on the page DOES matter. It must look like the screenshot above. If the page is out of order then you’re missing something or not correctly meeting a requirement.
-
-
-
-
-
-
-
-
-Target 1: XSRF (15 points)
-
-Having completed the warmup tasks Jason assigned (you did do them, right? They’re a lot of fun), you walk up to him for your first task. He explains that he has discovered a vulnerability in the GT payroll site that he’d like you to craft a proof-of-concept exploit for. Suppose a user, say Alice, is already logged into the Georgia Tech payroll site located here in the VM -> http://payroll.gatech.edu. He noticed that you can craft a web page so that when Alice visits your web page, she gets redirected (NO popups) to the Georgia Tech payroll page with her account number and routing number set to some values of her choice.
-
-Not wanting you to use your own bank account information (for obvious reasons), Jason tells you to use some information from a script that he wrote.
-
-To fetch your bank account number and routing number, run the get_bank_info script inside the VM and pass in your Georgia Tech username (e.g. jdoe3). Example command on the terminal: 
-
-debian@debian:~$ get_bank_info jdoe3
-
-
-Here is an example of what the script will print out:
-
-Username: jdoe3
-Account number: 169247273
-Routing number: 2567101679
-
-
-Double check that you entered your Georgia Tech username. This is the username you use to login to Canvas. It is NOT your 9-digit student number. If you enter the wrong username, which generates a different account and routing number, your exploit will fail our scripts, and you will receive zero points for this part, so be sure to double and triple check.
-
-The user must NOT see the contents of your crafted page! However, a split second due to browser rendering is acceptable. This is because in a real-world attack, the attacker might send this page via email to a user as part of a social engineering attack, and if the user sees the contents of the page it would arouse suspicion. We want the PoC to be as realistic as possible to drive home the point to the client.
-
-Deliverables
-
-t1.html
-In report.pdf, list the vulnerable PHP file and line numbers that make this exploit possible, and explain why they are vulnerable
-
-Sample t1.html deliverable:
-https://drive.google.com/file/d/1lcL8k_PgfZBegcpMdgtJ-BCszIhnzCyK/view?usp=sharing 
-
-Milestones
-
-A successful attack earns 15 points automatically.
-If you are unable to complete the task, you will earn partial credit as follows:
-
-Points
-Milestone (you earn points in this order)
-8
-You see the “XSRF prevented” message with your exploit.
-7
-Able to change the account number and routing number without extra browser tabs or popups. If you get to this point you’ve earned the full 15 points.
-
-Caution: Double check that the values you use are the ones assigned to you by running get_bank_info. You WILL lose points even if the value is off by one.
-
-
-Notes
-
-You can visit your web page by entering the path of your file in the browser URL bar. For example, this would be file:///home/user/t1.html assuming that your exploit lives in /home/user/. You can also simply double click to open the file in Chrome. This opens your exploit in another tab but this is OK and it works. Your actual exploit code must NOT open a new tab via JavaScript or other means. You can also open your file using the CTRL+o hotkey.
-
-Do NOT use relative paths for site URLs in your exploits.
-
-WRONG -> /somefolder/somefile.php
-CORRECT -> http://payroll.gatech.edu/somefile.php
-
-We see this every semester from a handful of students. Your exploit will fail, and you will not receive credit.
-
-Example of Successful Exploit
-
-Our autograder is a Selenium script so it will simulate button clicks using the same exact browser and VM that you have. It will do the following for Task 1:
-
-Log into the site using a known good username and password.
-Launch your t1.html file in the same open tab
-It must auto-submit!
-Verify that the URL starts with  “http://payroll.gatech.edu”
-Verify that the Changes Saved is on the page and that the account number and routing number matches your assigned values. Do not use 1234567890 as this is just an example. See the screenshot below.
-
-
-
-
-
-
-
-
-
-
-
-
-
-Target 2: XSS Username and Password Theft (25 points)
-
-Now that you’ve finished your PoC exploit for the first vulnerability, Jason thinks you are ready to write one for a potentially more-severe vulnerability. He noticed that you could steal a user’s username and password. You can craft a web page such that whenever a victim, say Bob, visits the page (by clicking the attachment in a phishing email), it will redirect him (NO popups) to http://payroll.gatech.edu/ with a malicious script injected into the page.
-
-The web page should look as if Bob visited the site directly without going through your page. When Bob enters his login information into the page and clicks Log In, an email with his username and password will be sent. Jason asks you to craft such a PoC web page. You will have to send the email to the local user account on the virtual machine.
-
-This attack requires an email to be sent to user on the system. The good news is that you can use hackmail:
-
-http://hackmail.org/sendmail.php
-
-
-Open the above URL from within virtual machine for instructions on how to send emails via your attack script. Any mail that the user account receives will appear in /var/mail/user file. A bookmark has been added to the file manager for your convenience. Note: Initially the user file will not be there. Your exploits will cause it to be generated.
-
-
-
-
-
-
-Requirements
-
-The attack must be performed using XSS. Providing a phishing web page will result in 0 points. The browser URL bar should contain the domain payroll.gatech.edu and not a phishing URL. If you find yourself copy and pasting html code from the payroll site into your t2.html then you’re likely heading down a very wrong path.
-The email payload should be the user’s username (login) and password separated by a single space. i.e. username password   <- notice the space!
-The sender of the email (look at the screenshot below before asking questions) should be set to JSVUYXJnZXQyLVRoaXNPbmVDYW5CZURpZmZpY3VsdC1FYXN0ZXJFZ2dTcHJpbmcyMDIyJSU
-Failure to follow this format will result in 0 points for this part.
-The redirected page must be cosmetically identical to the original page. The web page source can be different as long as the user cannot tell without looking at the source. This may take some trial and error. This part can be difficult! Use the developer tools to help you. Extra html characters such as < and > are not ok. Shifted alignments that can be noticed are also not ok. You should be able to hide all traces of your injected script.
-The page must be functionally identical. This means the user can log into the site in the normal fashion and will not notice any visual/functional differences. Yes, you must be able to log in to pass this test.
-
-Deliverables
-
-t2.html
-In report.pdf, list the vulnerable PHP file and line numbers that make this exploit possible, and explain why they are vulnerable
-
-Sample t2.html deliverable:
-https://drive.google.com/file/d/1s5WmU6Ygu8CTl0VfIQeyupr9-CDZ_a6I/view?usp=sharing 
-
-Milestones
-
-A successful attack earns 25 points automatically.
-If you are unable to complete the task, you will earn partial credit as follows:
-
-Points
-Milestone (you earn points in this order)
-10
-Can inject a script and send an email to the user account
-10
-Steal the user’s username and password and send them to the user account via email.
-
-Caution: The values need to be exactly correct. Extra spaces, quotes or anything WILL result in point loss.
-5
-The exploited web page is cosmetically identical to the original website. 
-
-
-Notes
-
-We suggest playing around with hackmail outside of your exploit to make sure you can generate data within the “user” mail file. Right click it and open with the Text Editor to view the contents. Do not delete the user file. If you do, hackmail will create a new one but you may be required to run Linux commands in order to view the contents. Just don’t delete it.
-Use the developer tools built into Chrome. Simply click F12 in Chrome and you’ll see the dev tools pop up at the bottom. This tool is your friend, get to know it and use it to help you through this task.
-
-Example of Successful Exploit
-
-Our autograder is a Selenium script so it will simulate button clicks using the same exact browser and VM that you have. It will do the following for Task 2:
-
-Open your t2.html file 
-It must auto-submit!
-Verify that the URL of the page is correct and that it is cosmetically identical to the original site. See screenshot below.
-Input a known good username
-Input a known good password
-Note: Your code does not need to handle invalid username and/or password. We’ll only test happy path.
-Click the Log In button
-Inspect the file system for the user file
-Validate that the user file contains username and password and that the sender is JSVUYXJnZXQyLVRoaXNPbmVDYW5CZURpZmZpY3VsdC1FYXN0ZXJFZ2dTcHJpbmcyMDIyJSU See screenshot below.
-Ensures that the user is logged in correctly. Your exploit cannot break the login functionality of the site.
-
-After opening t2.html, the resulting web page should look exactly the same as the legitimate site. Notice there are no cosmetic differences! The reason, you ask, is because it IS the payroll site and not a phishing site. Hint: your code needs to inject and redirect to the payroll website. Do not reconstruct a version of the site within t2.html. This is wrong.
-
-
-
-
-The email should be sent via hacker mail.
-
-
-
-
-
-Target 3: SQL Injection (15 points)
-
-Impressed with how much you’ve learned so far (and in so little time), Jason thinks he can entrust you to create a final PoC HTML webpage with the following requirements to show the website developers how easy it is to bypass their site’s authentication:
-
-The crafted page has a text field for the username and a submit button.
-NO password field!
-The user of this page is not logged into Georgia Tech payroll system, but when he or she enters a valid Georgia Tech payroll registered username (for example, judyhopps) and clicks submit, the user is redirected to http://payroll.gatech.edu/account.php and logged in as judyhopps.
-Do NOT execute destructive SQL commands such as DROP tables. System administrators can easily detect data loss!
-The id of the input field must be set to targetlogin, and the button id must be exploit. This is very important as the autograder specifically looks for these elements. Failure to include them will result in a zero for this target.  Example:
- 
-<input name="login" id="targetlogin" value="username" />
-<button id="exploit">Hold onto your butts!</button>
-
-Deliverables
-t3.html
-In report.pdf, list the vulnerable PHP file and line numbers that make this exploit possible, and explain why they are vulnerable
-
-
-Sample t3.html deliverable:
-https://drive.google.com/file/d/1C8CDBSLerl-RQZZAWJm4GH1CVboKwcwN/view?usp=sharing 
-
-Milestones
-
-A successful attack earns 15 points automatically (so long as it does not execute destructive SQL commands).
-If you are unable to complete the task, you will earn partial credit as follows:
-
-
-Points
-Milestone (you earn points in this order)
-10
-Able to log in as any user that exists on the system with no password.
-5
-The exploited web page is cosmetically & functionally identical to the original website.  If you get to this point you’ve earned the full 15 points.
-
-
-If you implemented the attack with a destructive SQL command that causes our scripts to fail to grade your target you’ll not receive points for this Task. You will not need to modify the database schema in any way in order to exploit this.
-
-
-Example of Successful Exploit
-
-Our autograder is a Selenium script so it will simulate button clicks using the same exact browser and VM that you have. It will do the following for Task 3:
-
-Launch your t3.html file in Chrome. See screenshot below.
-Find the targetlogin input field and replace whatever text is there with a known good username
-Find the exploit submit button and click it
-Inspect the resulting redirected page to ensure it is the correct page, see screenshot below, and that the user is successfully logged in.
-Ensure that the resulting redirected page is cosmetically & functionally identical to the original site.
-
-After visiting t3.html, the page displays an input field for the attacker.
-
-
-
-
-After typing in the username of an existing user in the payroll system, you should be successfully logged in. The site should function as if logged in legitimately.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-The final deliverables:
-     
-Filename
-Description
-Submit To
-report.pdf
-Please fill in your answers in the boxes in the provided report.docx template and export as a pdf when finished. Do NOT modify the template outside of the answer boxes, or we will not be able to grade it.
-Gradescope and Canvas both
-activity3.html
-Warmup HTML page for activity 3
-Canvas
-activity4.html
-Warmup HTML page for activity 4
-Canvas
-activity5.html
-Warmup HTML page for activity 5
-Canvas
-t1.html
-Crafted HTML page for Target 1
-Canvas
-t2.html
-
-
-Crafted HTML page for Target 2
-Canvas
-t3.html
-Crafted HTML page for Target 3
-Canvas
-
-
-Not following the file naming convention above results in a 5 point penalty. Note: Canvas may append additional numbers to your files. This is ok, just be sure to name the original uploaded files as you see above.
-Make sure you submit ALL files to Canvas on each submission. We only grade files that are in the final submission so if you fail to include a file on your last submission it will NOT be graded
-Do not use ZIP files to submit to Canvas, please submit all of your files individually.
-
-
-
-
-Acknowledgements
-
-Special thanks to Professor Vitaly Shmatikov for the inspiration of this project and his permission to modify and reuse his materials. You may find more about him and his research here: http://www.cs.cornell.edu/~shmat/
-
-
-		        
-
-
-
-Rubric
-Points
-Totals ✓
-1.
-Warmup Exercises                                                                                                                                             
-20
-
-
-i.
-Activity 1: Input Value
-1
-
-
-ii.
-Activity 1: Javascript File
-1
-
-
-iii.
-Activity 1: Function Output
-1
-
-
-iv.
-Activity 2: HTTP Verb
-1
-
-
-v.
-Activity 2: Status Code
-1
-
-
-vi.
-Activity 2: Cookie Value
-1
-
-
-vii.
-Activity 3: activity3.html
-4
-
-
-x.
-Activity 4: activity4.html
-5
-
-
-xi.
-Activity 5: activity5.html
-5
-
-
-2.
-Target 1: XSRF                                                                                                                                             
-25
-
-
-i.
-You see the “XSRF prevented” message with your exploit.
-10
-
-
-ii.
-Able to change the account number and routing number without extra browser tabs or popups. If you get to this point you’ve earned the full 15 points.
-10
-
-
-iii.
-Report questions
-5
-
-
-3.
-Target 2: XSS Username and Password Theft                                                                                            
-30
-
-
-i.
-Can inject a script and send an email to the user account.
-10
-
-
-ii.
-Steal the user’s username and password and send them to the user account via email.
-10
-
-
-iii.
-The exploited web page is cosmetically identical to the original website. 
-5
-
-
-iv.
-Report questions
-5
-
-
-4
-Target 3: SQL Injection                                                                                                                                
-25
-
-
-i.
-Able to log in as any user that exists on the system with no password.
-15
-
-
-ii.
-The exploited web page is cosmetically identical to the original website.  If you get to this point you’ve earned the full 15 points.
-5
-
-
-iii.
-Report questions
-5
-
-
-
-
+6) Go to v5.myetherwallet.com (you have to use v5), click access my wallet, click, MEW CX. It should
+connect to metamask. You should be at a screen now, and it should say "1 ETH".
+It should also tell you the current block number, which should be +5000 (I
+mined a bunch of empty blocks). Then go to contract, interact, and copy/paste
+the address and abi we provided.
+
+7) From here choose which function to run. The "donate" function just lets you
+give me money. (Its so I can refill the contract account easily). Recall a
+contract function execution is just a transaction. So you get to specify an
+amount + an input. Make sure your amount, if you want it to be zero is "0" and
+not null.
+
+You can find a list of all transactions at the following url:
+
+http://cryptolab.gtisc.gatech.edu/buzzcoin
+
+It updates probably every 10 minutes, or longer.
+
+There is an easter egg somwhere. If you are the first to find it, you get 30
+BUZZ. If you are the second, you get 15. The third gets 1. Send an email or a
+private piazza post to claim your reward.
+
+This is more important for the second part of the project (deployed later) where
+whoever has the highest amount of buzzcoin by the end of the semester gets a
+full letter grade bonus.
+
+You dont need to know web3, but itll be easier if you do. See examples here:
+
+https://web3py.readthedocs.io/en/stable/examples.html
+
+Our node will respond to any RPC request. See examples here:
+
+https://eth.wiki/json-rpc/API
+
+Finally. one of the questions becomes.... more difficult the more students who
+submit it. The first few people who submit the question basically get it for
+free. The last person has to do some serious serious work. Hope you read this
+and start early ;)
+
+If you want hints on any questions besides on setup, or problem1, you must pay
+the tax of one buzzcoin per hint. It may be worth it if my hint helps you get
+twenty buzz, and I promise they will be good hints :) Send 1 buzz to
+
+0xF796Ed91E8077e46b0D7F4e753730Eb944b49C34
+
+And in your piazza post, send tx info of you paying me >:)
+
+You are not allowed to try to connect to our node, mine, dos, or steal coins
+from other students. If you find an unlimited money glitch, let me know before
+hand and we will give some bonus, instead of leaving no coins for other
+students.
+
+Your deliverables are a list of all your transactions, your final balance (send a screenshot), and
+a small writeup of how you solved each question. Enough for us to know you did
+it
+
+have fun!
+
+<Provided Solidity file>
+
+pragma solidity >= 0.5.0 < 0.6.0;
+
+/*
+ ________  ___  ___  ________  ________  ________  ________  ___  ________      
+|\   __  \|\  \|\  \|\_____  \|\_____  \|\   ____\|\   __  \|\  \|\   ___  \    
+\ \  \|\ /\ \  \\\  \\|___/  /|\|___/  /\ \  \___|\ \  \|\  \ \  \ \  \\ \  \   
+ \ \   __  \ \  \\\  \   /  / /    /  / /\ \  \    \ \  \\\  \ \  \ \  \\ \  \  
+  \ \  \|\  \ \  \\\  \ /  /_/__  /  /_/__\ \  \____\ \  \\\  \ \  \ \  \\ \  \ 
+   \ \_______\ \_______\\________\\________\ \_______\ \_______\ \__\ \__\\ \__\
+    \|_______|\|_______|\|_______|\|_______|\|_______|\|_______|\|__|\|__| \|__|
+*/
+
+contract Buzzcoin {
+    mapping (address => bool) private p1;
+    mapping (address => bool) private p2;
+    mapping (address => bool) private p3;
+    mapping (address => bool) private p4;
+    mapping (address => bool) private p5;
+
+    mapping (address => bool) private perm;
+    address[95] private users;
+    address owner;
+    function () external payable {}
+    function donate() external payable {}
+    uint public mask;
+    uint public logmask;
+    constructor() public{
+        owner = msg.sender;
+        users = [0xF796Ed91E8077e46b0D7F4e753730Eb944b49C34,0xa2381530922EBeA1d9cA903e69e9c39488939e0d,0x0d5505d1f34D94E466ed75c2A889b0B2f9a58001,0x050279A9Cfb2db2738dC2DB92f532265694ae022,0xae283e6C4020d7a9759da9ccd910f0B5aF60454a,0x108261789D8FcB5E7b91dE56f4391b0C7Ea9a756,0xDd6d3e2a2B5A050a06c4a0494e5F1401a66594B1,0xE6864A2B2352Ee57D51F157D1ea3377340b961bc,0xec8a3A132D69F286C60ba0f9F2ab0c50F7CB45d1,0xb60646aCc01C742544f43339d03D759bf8a6050f,0xaa4B4A21B447120b25b8D8627C67bbE16dcD2297,0x5E23Ad055A17184B71be7460389eA5EB27429237,0xEc3A1AFa53bF6b58e7F52129A68860551aFdec85,0x5Eafc7DcC8dbDA41EB405FB1E544Cb3027aaAF8b,0xf2186f4f2798a9c1b0c269d1f39B7600A1c2F27F,0x12Af2fbeB51183fCEe7b03E0D4885b7567ef8cA9,0x15aBd174867c0355075c2c26AE44F5e58469E5B5,0x61446015D70a78769fa3B37c48A4Ad9BF93b97F0,0x1CF6b379b2411d26c0caEF2BD68DC3c23D9C464F,0x29cb9Afe61d928d887682a6DBe30652b51F20C5a,0x8b8899f0163bb40C05737D45DE75f9CB36B0979f,0x1BB706288028FA8Cc623cAf16dDAc85eA84E430E,0x47D803F9f48888702Be306DD6E287c2302CC1A05,0xf32fa30e2bfC68D83633388Bf4b2550250376Df9,0x02824BDDF2D999368Ab5FE5bE7B284c056ea56Df,0x28B058081F308d0148404b66c49267EadfBdDB97,0x9939c2eDEfFc9352a58F3039770D2c3Ec4C9cF3e,0x2E6794056531610bAB2185bf5af625eA035BAFB7,0x83072Bc42F85e401DDB0d7798072D2C3Af5805a4,0xc28a56C1C6dd3Dd19E7911Fb8a1d9795C585b805,0xCb067A62eDc7EB0daE6c739BbCC96dF1A74a9EFc,0x8024012343B12F6a17089480C602612B60E54448,0x854E642690033A65478f2FF95dc123f37D2d3508,0x37fD455819737AC867D3474B06E197a32c84269e,0xfD0B2Bf664EfB799Df77935eF1539a3981DA6829,0x7Faeafa67dDd99CE4e31f3DD75C88852AcA4acde,0xd13197025053171d22375e3aF70B94C51a9148db,0xf60A00204bD0076c1c30d00B418004C3B1c4F369,0xBe12E6dC89811111fcbC2f272c4dEE1418c2741B,0x67f287606E1366B629ce364C461a1e69a9080CF2,0xb2300D0f86AA0a01c8dEbF077d63b0Ca4aC9F935,0xaCDA94A203cCD8D46538CE9cAf3C0a4CD62d45BD,0x0D5E4A5838FC2B0166c62FF442B7531877b100AD,0xAF0aE19C8b2E5364e1B62Cc017c91F38B2ab1131,0xe1a92eCeD9cfbbB928584499aE1dC2792009C3D3,0xD067b2D14db99AaA872f8B41378F3BE0E310Eb47,0x4a7f19e95861Cbd05102c1Fa45d40b28F88319Ac,0x25cd92916A913f0722E29Aa354291c8D266e2C3B,0x07E79c68d0De37593b6eD4d5b134182E5E7611B6,0x7C30a9612005F1cC204Cc0E34d09A1171cc50D23,0x83393dc26Bc5207b9ce0482EdFe81032c05a11B2,0x5711AA72Ec6715C04240d66b1E6bfe022770901D,0x75D51B3a0639664E459DEF567596AF0738c8f521,0xb38305C0a605e746940A7f4F9e24CCF8C5F1c953,0xA5eFfF5891e4A54E45845cAA528655f110639674,0x93322E31a8340862a3c5018fC5816eEF519518D4,0xf7f74d8735536C45B202a3aF7b7f0FeF2a63315A,0x17b07139CcaB6011Fe76FDfb7855044BF883f3d8,0xB7e43Ec0b024a896932A46029466b101c4A0f4D4,0xe7aD9543A4324231Ee9e106dce3e7c5d839E7881,0x8d8F7f8740465Df9d53F1F8B567B3DcAf2CED86d,0x85FCF8cfB9be90d29d8ffD04f0Ac5ACA25e3cbEc,0x4112F49a6684195e57c831199FC3F0de59941747,0x4C659664c2ec0d3C933752Ab07d52e2Cc810026f,0xc633E3dc80fF7297509617EE3b064eeB80232320,0xa112fFF5EAE14A3593A18161441c0Af729b4fC6C,0xa1519EB0945B6Ba793F211b39Eaf6f43d9566F5C,0x2F2c50aB1874778E7B445A0fcCcF155A994C9CAc,0x57dd6A825DF69593337583cb4302DEBc9837727b,0xddC012A4a24A4aaD3CA20148AbB2cA196Da98869,0x4C4E82D2e1AC67B7e31EFC57Edb95CC1a2267C17,0xAA4CE52685E0d0617E31b1072b04BbB4E910b09C,0x65597Bf80563fC53c0Cbe61fAe697C393179feAe,0xeeE3A917842CBf10662B9C8692A8b73B60696aD2,0x2308AD6a4ECE67269062D197A313d4Afd9B7E8df,0x4752778f53566953853942E93332b9a0abae9Ed3,0x3886d352a6659C38DB807f4542726D263AF33c43,0x82869bA6F714EEA1Fad1708f281485000c7A9A14,0xc32566929AEf004C6f40c158203Ce498cdA3EEbd,0x4ce89E352CBf2F1D6Ccc2224E4Ba4faC9369cF16,0x91F3468D48c65650832Fd87c082225E675C36891,0x24Cd97f3D6B0602E8b39B22F0385a5bA545D44c5,0x437df6e889119Ac8C4a36E671aFDaA23Fe4Bc238,0xe2a2a000204a9dc01D83eF6BDec5C6f93540d778,0x61c5f05e62996FfCb1F65C6687346F7C56056Cc7,0x89127D8895655A649F52536F64a6bB4C570497BB,0x866A6b06c366fAb984eA88ADA77182C7589c13B5,0x383A6D32a857f333151ABDac4611F45a1d214de7,0x9C638860cd0D60A0C5d12Bd5dEC0B4090938C8C5,0xFfC700D98f75a6612De3B4FF731b16e50F726D02,0x4924C5646E5b42Ce1A1CC0Ef680a814473d992f8,0xefe02d3a350286Ed3672572Bd1574907e97902C5,0x41fAb123F143F5477A2edf68f8892D84143665F6,0xD270129a3884e3785213aFf5C12CF0A75773A7D3,0xe751B2bE388b046f0cC03407B8c70C79Ffe91211];
+        for(uint i = 0; i < users.length; i++){
+            perm[users[i]] = true;
+        }
+        mask = 1;
+        logmask = 0;
+    }
+
+    function problem1() external payable {
+        assert(!p1[msg.sender]);
+        assert(perm[msg.sender]);
+        msg.sender.transfer(10 ether);
+        p1[msg.sender] = true;
+    }
+
+    function problem2(uint nonce) external payable {
+        assert(!p2[msg.sender]);
+        assert(perm[msg.sender]);
+        uint256 hash = uint256(keccak256(abi.encode(nonce,msg.sender)));
+        uint256 temp = hash % mask;
+        if(temp == 0) {
+            msg.sender.transfer(30 ether);
+            p2[msg.sender] = true;
+            if(logmask < 35) {
+                mask = mask<<1;
+                logmask += 1;
+            }
+        }
+
+    }
+    
+    mapping (address => uint) private last_block;
+    function problem3() external payable {
+        assert(!p3[msg.sender]);
+        assert(perm[msg.sender]);
+        assert(block.number != last_block[msg.sender]);
+        uint dice = uint(keccak256(abi.encode(msg.sender,block.number,now))) %6;
+        last_block[msg.sender] = block.number;
+        if(dice == 0){
+            msg.sender.transfer(10 ether);
+            p3[msg.sender] = true;
+        }
+    }
+
+
+    function problem4() external payable {
+        assert(!p4[msg.sender]);
+        assert(perm[msg.sender]);
+        assert(msg.value == 3.14159265 ether);
+        msg.sender.transfer(23.14159265 ether);
+        p4[msg.sender] = true;
+    }
+    
+    function problem5(uint nonce) external payable {
+        assert(!p5[msg.sender]);
+        assert(perm[msg.sender]);
+        uint256 hash = uint256(keccak256(abi.encode(nonce)));
+        uint256 doggy = 0x1C0139BB37A6598130C27861C8E8EB3EFB094D0962C0DCB2C31710B3A04F0CFE;
+        if(hash == doggy){
+            msg.sender.transfer(30 ether);
+            p5[msg.sender] = true;
+        }
+    }
+}
