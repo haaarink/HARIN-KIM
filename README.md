@@ -19,5 +19,8 @@ phone : 010-7741-1426
 전공 관련 수강 과목 : 이산구조, 데이타구조, 시스템 프로그래밍, 프로그래밍 언어, 인공지능 입문<Physical AI>, Intro to info security, Blockchain and Cryptocurrency
   
 인턴 경험 : 무
+  
+# Relevant Projects
+  [Intro to info security] - Project 4 : 
 
 
