@@ -8,4 +8,13 @@ transcript
 : 2022 spring
 
 # Resume
-resume
+Harin Kim
+전산학부 20200180
+e-mail : harin@kaist.ac.kr / gkflsl02@gmail.com
+phone : 010-7741-1426
+
+전공 관련 수강 과목 : 이산구조, 데이타구조, 시스템 프로그래밍, 프로그래밍 언어, 인공지능 입문<Physical AI>, Intro to info security, Blockchain and Cryptocurrency
+  
+인턴 경험 : 무
+
+
