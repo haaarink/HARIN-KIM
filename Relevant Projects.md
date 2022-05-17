@@ -98,6 +98,9 @@ it
 have fun!
 
 <PART1 - Provided Solidity file>
+ 
+<pre>
+<code>
 
 pragma solidity >= 0.5.0 < 0.6.0;
 
@@ -191,6 +194,9 @@ contract Buzzcoin {
         }
     }
 }
+
+</code>
+</pre>
 
 <PART2 - Project description>
 Welcome to the Buzzcoin Carnival! School sanctioned gambling since it is not real
